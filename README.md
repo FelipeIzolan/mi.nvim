@@ -17,7 +17,7 @@
 - [williamboman/mason.nvim](https://github.com/williamboman/mason.nvim) - Nvim Package Manager
 - [williamboman/mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim) - Mason Extension for LSP Config
 - [b0o/schemastore.nvim](https://github.com/b0o/SchemaStore.nvim) - Schemastore
-- [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) - NerdFont Icons
+- [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) - Nerd Font Icons
 - [nvim-tree/nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua) - File Explorer
 - [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - Syntax Highlighting
 - [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) - Completion Engine
@@ -27,3 +27,21 @@
 - [SirVer/ultisnips](https://github.com/SirVer/ultisnips) - Snippets Engine
 - [honza/vim-snippets](https://github.com/honza/vim-snippets) - Snippets
 - [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) - Git Integration
+
+## 💾 Mappings
+
+- **Leader + q** - Quit.
+- **Leader + w** - Open terminal.
+- **Leader + d** - Toggle diagnostics.
+- **Leader + c** - Comment or uncomment line or block.
+- **Leader + t** - Open or focus file explorer.
+- **Leader + T** - Close file explorer.
+- **CTRL + w** - Move selected block up.
+- **CTRL + s** - Move selected block down.
+
+### nvim-cmp
+
+- **Tab** - Select next item.
+- **Shift + Tab** - Select prev item.
+- **Return** - Confirm.
+- **CTRL + up** - expand or jump forwards (snippet).
