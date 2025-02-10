@@ -65,9 +65,6 @@ require 'lazy'.setup({
             ['<Tab>'] = c.mapping.select_next_item(),
             ['<S-Tab>'] = c.mapping.select_prev_item(),
             ['<CR>'] = c.mapping.confirm({ select = false }),
-            ['<C-w>'] = function(fallback)
-              m.expand_or_jump_forwards(fallback)
-            end,
             ['<C-up>'] = function(fallback)
               m.expand_or_jump_forwards(fallback)
             end
@@ -184,6 +181,7 @@ vim.cmd 'colorscheme gruvbox'
 keymap('v', '<C-w>', ':m \'<-2<CR>gv=gv', {})
 keymap('v', '<C-s>', ':m \'>+1<CR>gv=gv', {})
 keymap('n', '<Leader>q', ':q<CR>', { noremap = true })
+keymap('n', '<Leader>T', ':NvimTreeClose<CR>', {})
 keymap('n', '<Leader>t', '', {
   callback = function()
     local t = require 'nvim-tree.api'.tree
