@@ -16,42 +16,64 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require 'lazy'.setup({
-    'b0o/schemastore.nvim',
-    'neovim/nvim-lspconfig',
     'nvim-tree/nvim-web-devicons',
-    'SirVer/ultisnips',
-    'honza/vim-snippets',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-buffer',
-    {
-      'lewis6991/gitsigns.nvim',
-      config = true
-    },
-    {
-      'quangnguyen30192/cmp-nvim-ultisnips',
-      config = true
-    },
-    {
-      'williamboman/mason.nvim',
-      config = true
-    },
     {
       'nvim-tree/nvim-tree.lua',
       config = true
     },
     {
-      'ellisonleao/gruvbox.nvim',
-      opts = {
-        overrides = {
-          SignColumn = { bg = "#282828" },
-          DiagnosticSignError = { link = 'DiagnosticError' },
-          DiagnosticSignWarn = { link = 'DiagnosticWarn'},
-          DiagnosticSignHint = { link = 'DiagnosticHint' }
+      'williamboman/mason.nvim',
+      cmd = { "Mason", "MasonInstall", "MasonUpdate" },
+      config = true
+    },
+    {
+      'lewis6991/gitsigns.nvim',
+      event = { "BufReadPost", "BufNewFile" },
+      config = true
+    },
+    {
+      'nvim-treesitter/nvim-treesitter',
+      event = { "BufReadPost", "BufNewFile" },
+      cmd = { "TSInstall", "TSInstallInfo", "TSModuleInfo" },
+      build = ':TSUpdate',
+      config = function()
+        require 'nvim-treesitter.configs'.setup {
+          auto_install = true,
+          highlight = {
+            enable = true
+          }
         }
-      }
+      end
+    },
+    {
+      'ellisonleao/gruvbox.nvim',
+      lazy = false,
+      priority = 1000,
+      config = function ()
+        require 'gruvbox'.setup {
+          overrides = {
+            SignColumn = { bg = "#282828" },
+            DiagnosticSignError = { link = 'DiagnosticError' },
+            DiagnosticSignWarn = { link = 'DiagnosticWarn' },
+            DiagnosticSignHint = { link = 'DiagnosticHint' }
+          }
+        }
+        vim.cmd('colorscheme gruvbox')
+      end
     },
     {
       'hrsh7th/nvim-cmp',
+      event = "InsertEnter",
+      dependencies = {
+        'SirVer/ultisnips',
+        'honza/vim-snippets',
+        'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-buffer',
+        {
+          'quangnguyen30192/cmp-nvim-ultisnips',
+          config = true
+        }
+      },
       config = function()
         local m = require 'cmp_nvim_ultisnips.mappings'
         local c = require 'cmp'
@@ -78,19 +100,12 @@ require 'lazy'.setup({
       end
     },
     {
-      'nvim-treesitter/nvim-treesitter',
-      build = ':TSUpdate',
-      config = function()
-        require 'nvim-treesitter.configs'.setup {
-          auto_install = true,
-          highlight = {
-            enable = true
-          }
-        }
-      end
-    },
-    {
-      'williamboman/mason-lspconfig.nvim',
+      'neovim/nvim-lspconfig',
+      event = { "BufReadPost", "BufNewFile" },
+      dependencies = {
+        'williamboman/mason-lspconfig.nvim',
+        'b0o/schemastore.nvim',
+      },
       config = function()
         local l = require 'lspconfig'
         local m = require 'cmp_nvim_lsp'.default_capabilities()
@@ -130,6 +145,9 @@ require 'lazy'.setup({
     }
   },
   {
+    defaults = {
+      lazy = true
+    },
     performance = {
       rtp = {
         disabled_plugins = {
@@ -175,8 +193,6 @@ o.ignorecase = true
 o.smartcase = true
 o.termguicolors = true
 o.clipboard = 'unnamedplus'
-
-vim.cmd 'colorscheme gruvbox'
 
 keymap('v', '<C-w>', ':m \'<-2<CR>gv=gv', {})
 keymap('v', '<C-s>', ':m \'>+1<CR>gv=gv', {})
@@ -238,7 +254,7 @@ keymap('', '<Leader>c', '', {
 })
 local hidden = false
 keymap('', '<Leader>d', '', {
-  callback = function ()
+  callback = function()
     if hidden then
       vim.diagnostic.show()
     else
@@ -273,23 +289,24 @@ function Statusline()
     ['nt'] = 'TERMINAL',
   }
   return
-         '%#Search#%  ' .. m[vim.api.nvim_get_mode().mode] ..
-         ' %#Cursor#%  ' .. ' ' .. "%{get(b:,'gitsigns_head','none')}" ..
-         ' %#DiagnosticError#%  󰝤 ' .. #vim.diagnostic.get(0, { severity = 'Error' }) ..
-         ' %#DiagnosticWarn#% 󰝤 ' .. #vim.diagnostic.get(0, { severity = 'Warn' }) ..
-         ' %#DiagnosticHint#% 󰝤 ' .. #vim.diagnostic.get(0, { severity = 'Hint' }) ..
-         '%#Comment#%  ' .. '%F' ..
-         '%=' ..
-         ' %#Cursor#%  ' .. '%l:%c' ..
-         ' %#Search#%  '.. vim.bo.filetype .. ' '
+      '%#Search#%  ' .. m[vim.api.nvim_get_mode().mode] ..
+      ' %#Cursor#%  ' .. ' ' .. "%{get(b:,'gitsigns_head','none')}" ..
+      ' %#DiagnosticError#%  󰝤 ' .. #vim.diagnostic.get(0, { severity = 'Error' }) ..
+      ' %#DiagnosticWarn#% 󰝤 ' .. #vim.diagnostic.get(0, { severity = 'Warn' }) ..
+      ' %#DiagnosticHint#% 󰝤 ' .. #vim.diagnostic.get(0, { severity = 'Hint' }) ..
+      '%#Comment#%  ' .. '%F' ..
+      '%=' ..
+      ' %#Cursor#%  ' .. '%l:%c' ..
+      ' %#Search#%  ' .. vim.bo.filetype .. ' '
 end
+
 autocmd({ 'BufEnter', 'WinEnter' }, {
-  callback = function ()
+  callback = function()
     vim.cmd('setlocal statusline=%!v:lua.Statusline()')
   end
 })
 autocmd({ 'TermOpen' }, {
-  callback = function ()
+  callback = function()
     vim.wo.number = false
     vim.wo.signcolumn = 'no'
   end
