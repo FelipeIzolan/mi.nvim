@@ -180,7 +180,8 @@ vim.cmd 'colorscheme gruvbox'
 
 keymap('v', '<C-w>', ':m \'<-2<CR>gv=gv', {})
 keymap('v', '<C-s>', ':m \'>+1<CR>gv=gv', {})
-keymap('n', '<Leader>q', ':q<CR>', { noremap = true })
+keymap('n', '<Leader>q', ':q<CR>', {})
+keymap('n', '<Leader>w', ':belowright split +term<CR>', {})
 keymap('n', '<Leader>T', ':NvimTreeClose<CR>', {})
 keymap('n', '<Leader>t', '', {
   callback = function()
@@ -285,5 +286,11 @@ end
 autocmd({ 'BufEnter', 'WinEnter' }, {
   callback = function ()
     vim.cmd('setlocal statusline=%!v:lua.Statusline()')
+  end
+})
+autocmd({ 'TermOpen' }, {
+  callback = function ()
+    vim.wo.number = false
+    vim.wo.signcolumn = 'no'
   end
 })

@@ -17,7 +17,7 @@
 mkdir ~/.config/nvim
 ```
 ```
-curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init.lua -o ~/.config/nvim/test.lua
+curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init.lua -o ~/.config/nvim/init.lua
 ```
 
 ### Windows 10/11 (PowerShell)
