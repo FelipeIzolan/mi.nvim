@@ -9,6 +9,25 @@
 - Python3
   - ```pip install neovim```
 
+## 📦 Install
+
+
+### Linux
+```
+mkdir ~/.config/nvim
+```
+```
+curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init.lua -o ~/.config/nvim/test.lua
+```
+
+### Windows 10/11 (PowerShell)
+```
+mkdir $ENV:USERPROFILE\AppData\Local\nvim
+```
+```
+curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init.lua -o $ENV:USERPROFILE\AppData\Local\nvim\init.lua
+```
+
 ## 🧩 Plugins
 
 - [folke/lazy.nvim](https://github.com/folke/lazy.nvim) - Plugin Manager
