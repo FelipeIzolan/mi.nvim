@@ -18,16 +18,15 @@ vim.opt.rtp:prepend(lazypath)
 require 'lazy'.setup({
     'b0o/schemastore.nvim',
     'neovim/nvim-lspconfig',
-    'ellisonleao/gruvbox.nvim',
     'nvim-tree/nvim-web-devicons',
     'SirVer/ultisnips',
     'honza/vim-snippets',
+    'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/cmp-buffer',
     {
       'lewis6991/gitsigns.nvim',
       config = true
     },
-    'hrsh7th/cmp-nvim-lsp',
     {
       'quangnguyen30192/cmp-nvim-ultisnips',
       config = true
@@ -39,6 +38,17 @@ require 'lazy'.setup({
     {
       'nvim-tree/nvim-tree.lua',
       config = true
+    },
+    {
+      'ellisonleao/gruvbox.nvim',
+      opts = {
+        overrides = {
+          SignColumn = { bg = "#282828" },
+          DiagnosticSignError = { link = 'DiagnosticError' },
+          DiagnosticSignWarn = { link = 'DiagnosticWarn'},
+          DiagnosticSignHint = { link = 'DiagnosticHint' }
+        }
+      }
     },
     {
       'hrsh7th/nvim-cmp',
@@ -154,6 +164,7 @@ local autocmd = vim.api.nvim_create_autocmd
 g.mapleader = ' '
 
 o.mouse = 'a'
+o.signcolumn = 'yes:1'
 o.laststatus = 3
 o.timeoutlen = 500
 o.number = true
@@ -226,6 +237,17 @@ keymap('', '<Leader>c', '', {
     end
   end
 })
+local hidden = false
+keymap('', '<Leader>d', '', {
+  callback = function ()
+    if hidden then
+      vim.diagnostic.show()
+    else
+      vim.diagnostic.hide()
+    end
+    hidden = not hidden
+  end
+})
 
 function Statusline()
   local m = {
@@ -262,7 +284,6 @@ function Statusline()
          ' %#Cursor#%  ' .. '%l:%c' ..
          ' %#Search#%  '.. vim.bo.filetype .. ' '
 end
-
 autocmd({ 'BufEnter', 'WinEnter' }, {
   callback = function ()
     vim.cmd('setlocal statusline=%!v:lua.Statusline()')
