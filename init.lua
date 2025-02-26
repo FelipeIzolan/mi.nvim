@@ -19,7 +19,11 @@ require 'lazy'.setup({
     'nvim-tree/nvim-web-devicons',
     {
       'nvim-tree/nvim-tree.lua',
-      config = true
+      config = {
+        filters = {
+          enable = false
+        }
+      }
     },
     {
       'williamboman/mason.nvim',
@@ -65,34 +69,18 @@ require 'lazy'.setup({
       'hrsh7th/nvim-cmp',
       event = "InsertEnter",
       dependencies = {
-        'SirVer/ultisnips',
-        'honza/vim-snippets',
         'hrsh7th/cmp-nvim-lsp',
         'hrsh7th/cmp-buffer',
-        {
-          'quangnguyen30192/cmp-nvim-ultisnips',
-          config = true
-        }
       },
       config = function()
-        local m = require 'cmp_nvim_ultisnips.mappings'
         local c = require 'cmp'
         c.setup({
-          snippet = {
-            expand = function(a)
-              vim.fn['UltiSnips#Anon'](a.body)
-            end,
-          },
           mapping = {
             ['<Tab>'] = c.mapping.select_next_item(),
             ['<S-Tab>'] = c.mapping.select_prev_item(),
             ['<CR>'] = c.mapping.confirm({ select = false }),
-            ['<C-up>'] = function(fallback)
-              m.expand_or_jump_forwards(fallback)
-            end
           },
           sources = c.config.sources({
-            { name = 'ultisnips' },
             { name = 'nvim_lsp' },
             { name = 'buffer' }
           })

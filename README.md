@@ -6,8 +6,6 @@
 - Git
 - Neovim
 - Nerd Font
-- Python3
-  - ```pip install neovim```
 
 ## 📦 Install
 
@@ -42,9 +40,6 @@ curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init
 - [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) - Completion Engine
 - [hrsh7th/cmp-buffer](https://github.com/hrsh7th/cmp-buffer) - CMP Buffer Source
 - [hrsh7th/cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp) - CMP Nvim LSP Source
-- [quangnguyen30192/cmp-nvim-ultisnips](https://github.com/quangnguyen30192/cmp-nvim-ultisnips) - CMP Ultisnips Source
-- [SirVer/ultisnips](https://github.com/SirVer/ultisnips) - Snippets Engine
-- [honza/vim-snippets](https://github.com/honza/vim-snippets) - Snippets
 - [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) - Git Integration
 
 ## 💾 Mappings
@@ -63,4 +58,3 @@ curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init
 - **Tab** - Select next item.
 - **Shift + Tab** - Select prev item.
 - **Return** - Confirm.
-- **CTRL + up** - expand or jump forwards (snippet).
