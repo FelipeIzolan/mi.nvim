@@ -9,7 +9,6 @@
 
 ## 📦 Install
 
-
 ### Linux
 ```
 mkdir ~/.config/nvim
@@ -37,24 +36,21 @@ curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init
 - [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) - Nerd Font Icons
 - [nvim-tree/nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua) - File Explorer
 - [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - Syntax Highlighting
+- [L3MON4D3/LuaSnip](https://github.com/L3MON4D3/LuaSnip) - Snippet Engine
+- [rafamadriz/friendly-snippets](https://github.com/rafamadriz/friendly-snippets) - Snippets Collection
 - [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) - Completion Engine
 - [hrsh7th/cmp-buffer](https://github.com/hrsh7th/cmp-buffer) - CMP Buffer Source
 - [hrsh7th/cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp) - CMP Nvim LSP Source
+- [saadparwaiz1/cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip) - CMP LuaSnip Source
 - [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) - Git Integration
+- [stevearc/conform.nvim](https://github.com/stevearc/conform.nvim) - Formatter
 
 ## 💾 Mappings
 
 - **Leader + q** - Quit.
 - **Leader + w** - Open terminal.
-- **Leader + d** - Toggle diagnostics.
 - **Leader + c** - Comment or uncomment line or block.
 - **Leader + t** - Open or focus file explorer.
 - **Leader + T** - Close file explorer.
 - **CTRL + w** - Move selected block up.
 - **CTRL + s** - Move selected block down.
-
-### nvim-cmp
-
-- **Tab** - Select next item.
-- **Shift + Tab** - Select prev item.
-- **Return** - Confirm.

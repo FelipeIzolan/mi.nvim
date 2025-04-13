@@ -36,6 +36,16 @@ require 'lazy'.setup({
       config = true
     },
     {
+      'stevearc/conform.nvim',
+      event = { "BufReadPost", "BufNewFile" },
+      config = {
+        format_on_save = {
+          timeout_ms = 500,
+          lsp_format = "fallback"
+        }
+      }
+    },
+    {
       'nvim-treesitter/nvim-treesitter',
       event = { "BufReadPost", "BufNewFile" },
       cmd = { "TSInstall", "TSInstallInfo", "TSModuleInfo" },
@@ -53,7 +63,7 @@ require 'lazy'.setup({
       'ellisonleao/gruvbox.nvim',
       lazy = false,
       priority = 1000,
-      config = function ()
+      config = function()
         require 'gruvbox'.setup {
           overrides = {
             SignColumn = { bg = "#282828" },
@@ -66,22 +76,67 @@ require 'lazy'.setup({
       end
     },
     {
+      'L3MON4D3/LuaSnip',
+      event = "InsertEnter",
+      dependencies = {
+        'rafamadriz/friendly-snippets',
+      },
+      config = function()
+        require('luasnip').setup()
+        require('luasnip.loaders.from_vscode').lazy_load()
+      end
+    },
+    {
       'hrsh7th/nvim-cmp',
       event = "InsertEnter",
       dependencies = {
+        'saadparwaiz1/cmp_luasnip',
         'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-buffer'
       },
       config = function()
         local c = require 'cmp'
+        local l = require 'luasnip'
         c.setup({
+          snippet = {
+            expand = function(args)
+              require 'luasnip'.lsp_expand(args.body)
+            end
+          },
           mapping = {
-            ['<Tab>'] = c.mapping.select_next_item(),
-            ['<S-Tab>'] = c.mapping.select_prev_item(),
-            ['<CR>'] = c.mapping.confirm({ select = false }),
+            ['<Tab>'] = c.mapping(function(fallback)
+              if l.locally_jumpable(1) then
+                l.jump(1)
+              elseif c.visible() then
+                c.select_next_item()
+              else
+                fallback()
+              end
+            end),
+            ['<S-Tab>'] = c.mapping(function(fallback)
+              if l.locally_jumpable(-1) then
+                l.jump(-1)
+              elseif c.visible() then
+                c.select_prev_item()
+              else
+                fallback()
+              end
+            end),
+            ['<CR>'] = c.mapping(function(fallback)
+              if c.visible() then
+                if l.expandable() then
+                  l.expand()
+                else
+                  c.confirm({ select = true })
+                end
+              else
+                fallback()
+              end
+            end),
           },
           sources = c.config.sources({
             { name = 'nvim_lsp' },
+            { name = 'luasnip' },
             { name = 'buffer' }
           })
         })
@@ -182,6 +237,11 @@ o.smartcase = true
 o.termguicolors = true
 o.clipboard = 'unnamedplus'
 
+vim.diagnostic.config({
+  underline = true,
+  severity_sort = true
+})
+
 keymap('v', '<C-w>', ':m \'<-2<CR>gv=gv', {})
 keymap('v', '<C-s>', ':m \'>+1<CR>gv=gv', {})
 keymap('n', '<Leader>q', ':q<CR>', {})
@@ -240,17 +300,6 @@ keymap('', '<Leader>c', '', {
     end
   end
 })
-local hidden = false
-keymap('', '<Leader>d', '', {
-  callback = function()
-    if hidden then
-      vim.diagnostic.show()
-    else
-      vim.diagnostic.hide()
-    end
-    hidden = not hidden
-  end
-})
 
 function Statusline()
   local m = {
@@ -277,15 +326,12 @@ function Statusline()
     ['nt'] = 'TERMINAL',
   }
   return
-      '%#Search#%  ' .. m[vim.api.nvim_get_mode().mode] ..
-      ' %#Cursor#%  ' .. ' ' .. "%{get(b:,'gitsigns_head','none')}" ..
-      ' %#DiagnosticError#%  󰝤 ' .. #vim.diagnostic.get(0, { severity = 'Error' }) ..
-      ' %#DiagnosticWarn#% 󰝤 ' .. #vim.diagnostic.get(0, { severity = 'Warn' }) ..
-      ' %#DiagnosticHint#% 󰝤 ' .. #vim.diagnostic.get(0, { severity = 'Hint' }) ..
-      '%#Comment#%  ' .. '%F' ..
+      '%#IncSearch#%  ' .. m[vim.api.nvim_get_mode().mode] ..
+      ' %#StatusLine#%  ' .. ' ' .. "%{get(b:,'gitsigns_head','none')}" ..
+      ' %#StatusLineNC#%  ' .. '%F' ..
       '%=' ..
-      ' %#Cursor#%  ' .. '%l:%c' ..
-      ' %#Search#%  ' .. vim.bo.filetype .. ' '
+      ' %#StatusLine#%  ' .. '%l:%c' ..
+      ' %#IncSearch#%  ' .. vim.bo.filetype .. ' '
 end
 
 autocmd({ 'BufEnter', 'WinEnter' }, {
