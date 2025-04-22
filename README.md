@@ -40,6 +40,7 @@ curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init
 - [rafamadriz/friendly-snippets](https://github.com/rafamadriz/friendly-snippets) - Snippets Collection
 - [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) - Completion Engine
 - [hrsh7th/cmp-buffer](https://github.com/hrsh7th/cmp-buffer) - CMP Buffer Source
+- [hrsh7th/cmp-path](https://github.com/hrsh7th/cmp-path) - CMP Path Source
 - [hrsh7th/cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp) - CMP Nvim LSP Source
 - [saadparwaiz1/cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip) - CMP LuaSnip Source
 - [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) - Git Integration

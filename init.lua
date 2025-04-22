@@ -92,7 +92,8 @@ require 'lazy'.setup({
       dependencies = {
         'saadparwaiz1/cmp_luasnip',
         'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-buffer'
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-path'
       },
       config = function()
         local c = require 'cmp'
@@ -137,7 +138,8 @@ require 'lazy'.setup({
           sources = c.config.sources({
             { name = 'nvim_lsp' },
             { name = 'luasnip' },
-            { name = 'buffer' }
+            { name = 'buffer' },
+            { name = 'path' }
           })
         })
       end
