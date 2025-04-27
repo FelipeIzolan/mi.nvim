@@ -9,7 +9,7 @@ minimal neovim configuration concentrated in a single file.
 - Make, Windows users must have [make](https://scoop.sh/#/apps?q=make&id=c43ff861c0f1713336e5304d85334a29ffb86317) installed.
 
 > [!IMPORTANT]
-> I recommend using [scoop](https://scoop.sh/) (a command-line installer) to install GCC and Make;
+> I recommend using [scoop](https://scoop.sh/) (a command-line installer for Windows) to install GCC and Make;
 
 ## 🧩 Plugins
 
@@ -34,27 +34,27 @@ minimal neovim configuration concentrated in a single file.
 
 ## ⌨️ Mappings
 
-- **<Leader> + q** - Quit.
-- **<Leader> + r** - Open Terminal.
-- **<Leader> + c** - Comment or uncomment line or block.
-- **<Leader> + t** - Open or focus file explorer.
-- **<Leader> + T** - Close file explorer.
-- **<C> + w** - Move selected block up.
-- **<C> + s** - Move selected block down.
+- **\<Leader\> + q** - Quit.
+- **\<Leader\> + r** - Open Terminal.
+- **\<Leader\> + c** - Comment or uncomment line or block.
+- **\<Leader\> + t** - Open or focus file explorer.
+- **\<Leader\> + T** - Close file explorer.
+- **\<C\> + w** - Move selected block up.
+- **\<C\> + s** - Move selected block down.
 
-> [!INFO]
-> <Leader> is spacebar; <C> is Ctrl;
+**nvim-cmp**
 
-### nvim-cmp
+- **\<Tab\>** - Select next item.
+- **\<S-Tab\>** - Select previous item.
+- **\<CR\>** - Confirm.
 
-- **<Tab>** - Select next item.
-- **<S-Tab>** - Select previous item.
-- **<CR>** - Confirm.
+**nvim-tree**
 
-> [!INFO]
-> <CR> is Enter; <S> is shift;
-
-### nvim-tree
-
-- **<CR>** - Change directory or open file.
+- **\<CR\>** - Change directory or open file.
 - **+ Default mappings** - https://github.com/nvim-tree/nvim-tree.lua
+
+> [!NOTE]
+> **\<C\>** is Ctrl;\
+> **\<S\>** is Shift;\
+> **\<CR\>** is Enter;\
+> **\<Leader\>** is Spacebar;
