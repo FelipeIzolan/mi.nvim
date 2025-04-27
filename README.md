@@ -1,29 +1,15 @@
 # 📝 mi.nvim
 
-![image](https://github.com/user-attachments/assets/e903c80c-5f26-4024-9ed3-1b1e17850f32)
+minimal neovim configuration concentrated in a single file.
 
-## 📌 Requirements
-- Git
-- Neovim
-- Nerd Font
+## 📋 Pre-requisites
+- [Neovim 0.11+](https://neovim.io/)
+- [Nerd Font](https://www.nerdfonts.com/)
+- GCC, Windows users must have [mingw](https://scoop.sh/#/apps?q=mingw&id=965b35870a2cbc6584a302ef1721c7f18faaef24) installed.
+- Make, Windows users must have [make](https://scoop.sh/#/apps?q=make&id=c43ff861c0f1713336e5304d85334a29ffb86317) installed.
 
-## 📦 Install
-
-### Linux
-```
-mkdir ~/.config/nvim
-```
-```
-curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init.lua -o ~/.config/nvim/init.lua
-```
-
-### Windows 10/11 (PowerShell)
-```
-mkdir $ENV:USERPROFILE\AppData\Local\nvim
-```
-```
-curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init.lua -o $ENV:USERPROFILE\AppData\Local\nvim\init.lua
-```
+> [!IMPORTANT]
+> I recommend using [scoop](https://scoop.sh/) (a command-line installer) to install GCC and Make;
 
 ## 🧩 Plugins
 
@@ -46,12 +32,29 @@ curl https://raw.githubusercontent.com/FelipeIzolan/mi.nvim/refs/heads/main/init
 - [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) - Git Integration
 - [stevearc/conform.nvim](https://github.com/stevearc/conform.nvim) - Formatter
 
-## 💾 Mappings
+## ⌨️ Mappings
 
-- **Leader + q** - Quit.
-- **Leader + w** - Open terminal.
-- **Leader + c** - Comment or uncomment line or block.
-- **Leader + t** - Open or focus file explorer.
-- **Leader + T** - Close file explorer.
-- **CTRL + w** - Move selected block up.
-- **CTRL + s** - Move selected block down.
+- **<Leader> + q** - Quit.
+- **<Leader> + r** - Open Terminal.
+- **<Leader> + c** - Comment or uncomment line or block.
+- **<Leader> + t** - Open or focus file explorer.
+- **<Leader> + T** - Close file explorer.
+- **<C> + w** - Move selected block up.
+- **<C> + s** - Move selected block down.
+
+> [!INFO]
+> <Leader> is spacebar; <C> is Ctrl;
+
+### nvim-cmp
+
+- **<Tab>** - Select next item.
+- **<S-Tab>** - Select previous item.
+- **<CR>** - Confirm.
+
+> [!INFO]
+> <CR> is Enter; <S> is shift;
+
+### nvim-tree
+
+- **<CR>** - Change directory or open file.
+- **+ Default mappings** - https://github.com/nvim-tree/nvim-tree.lua

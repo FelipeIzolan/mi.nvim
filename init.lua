@@ -18,14 +18,6 @@ vim.opt.rtp:prepend(lazypath)
 require 'lazy'.setup({
     'nvim-tree/nvim-web-devicons',
     {
-      'nvim-tree/nvim-tree.lua',
-      config = {
-        filters = {
-          enable = false
-        }
-      }
-    },
-    {
       'williamboman/mason.nvim',
       cmd = { "Mason", "MasonInstall", "MasonUpdate" },
       config = true
@@ -86,6 +78,29 @@ require 'lazy'.setup({
         require('luasnip.loaders.from_vscode').lazy_load()
       end
     },
+    {
+      'nvim-tree/nvim-tree.lua',
+      config = {
+        hijack_cursor = true,
+        filters = { enable = false },
+        on_attach = function(bufnr)
+          local api = require("nvim-tree.api")
+          local opts = { buffer = bufnr, noremap = true, silent = true, nowait = true }
+
+          api.config.mappings.default_on_attach(bufnr)
+
+          vim.keymap.set("n", "<CR>", function()
+            local node = api.tree.get_node_under_cursor()
+            if node and node.type == "directory" then
+              api.tree.change_root_to_node()
+            else
+              api.node.open.edit()
+            end
+          end, opts)
+        end,
+      }
+    },
+
     {
       'hrsh7th/nvim-cmp',
       event = "InsertEnter",
@@ -247,7 +262,6 @@ vim.diagnostic.config({
 keymap('v', '<C-w>', ':m \'<-2<CR>gv=gv', {})
 keymap('v', '<C-s>', ':m \'>+1<CR>gv=gv', {})
 keymap('n', '<Leader>q', ':q<CR>', {})
-keymap('n', '<Leader>w', ':belowright split +term<CR>', {})
 keymap('n', '<Leader>T', ':NvimTreeClose<CR>', {})
 keymap('n', '<Leader>t', '', {
   callback = function()
@@ -257,6 +271,23 @@ keymap('n', '<Leader>t', '', {
     else
       t.open()
     end
+  end
+})
+keymap('n', '<Leader>r', '', {
+  callback = function()
+    local buf = vim.api.nvim_create_buf(false, true)
+    local w = math.floor(vim.o.columns * 0.8)
+    local h = math.floor(vim.o.lines * 0.8)
+    vim.api.nvim_open_win(buf, true, {
+      relative = 'editor',
+      width = w,
+      height = h,
+      col = math.floor((vim.o.columns - w) / 2),
+      row = math.floor((vim.o.lines - h) / 2) - 1,
+      border = "shadow"
+    })
+    vim.cmd.terminal()
+    vim.cmd(':startinsert')
   end
 })
 keymap('', '<Leader>c', '', {
@@ -329,7 +360,7 @@ function Statusline()
   }
   return
       '%#IncSearch#%  ' .. m[vim.api.nvim_get_mode().mode] ..
-      ' %#StatusLine#%  ' .. ' ' .. "%{get(b:,'gitsigns_head','none')}" ..
+      ' %#StatusLine#%  ' .. ' ' .. "%{get(b:,'gitsigns_head','none')}" ..
       ' %#StatusLineNC#%  ' .. '%F' ..
       '%=' ..
       ' %#StatusLine#%  ' .. '%l:%c' ..
@@ -339,11 +370,5 @@ end
 autocmd({ 'BufEnter', 'WinEnter' }, {
   callback = function()
     vim.cmd('setlocal statusline=%!v:lua.Statusline()')
-  end
-})
-autocmd({ 'TermOpen' }, {
-  callback = function()
-    vim.wo.number = false
-    vim.wo.signcolumn = 'no'
   end
 })
