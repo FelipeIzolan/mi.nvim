@@ -31,8 +31,7 @@ require 'lazy'.setup({
       'stevearc/conform.nvim',
       event = { "BufReadPost", "BufNewFile" },
       config = {
-        format_on_save = {
-          timeout_ms = 500,
+        format_after_save = {
           lsp_format = "fallback"
         }
       }
@@ -52,30 +51,19 @@ require 'lazy'.setup({
       end
     },
     {
-      'ellisonleao/gruvbox.nvim',
+      'rebelot/kanagawa.nvim',
       lazy = false,
       priority = 1000,
       config = function()
-        require 'gruvbox'.setup {
-          overrides = {
-            SignColumn = { bg = "#282828" },
-            DiagnosticSignError = { link = 'DiagnosticError' },
-            DiagnosticSignWarn = { link = 'DiagnosticWarn' },
-            DiagnosticSignHint = { link = 'DiagnosticHint' }
-          }
+        require 'kanagawa'.setup {
+          overrides = function()
+            return {
+              FloatBorder = { bg = nil },
+              Pmenu = { link = 'FloatBorder' },
+            }
+          end
         }
-        vim.cmd('colorscheme gruvbox')
-      end
-    },
-    {
-      'L3MON4D3/LuaSnip',
-      event = "InsertEnter",
-      dependencies = {
-        'rafamadriz/friendly-snippets',
-      },
-      config = function()
-        require('luasnip').setup()
-        require('luasnip.loaders.from_vscode').lazy_load()
+        vim.cmd('colorscheme kanagawa')
       end
     },
     {
@@ -100,64 +88,35 @@ require 'lazy'.setup({
         end,
       }
     },
-
     {
-      'hrsh7th/nvim-cmp',
-      event = "InsertEnter",
-      dependencies = {
-        'saadparwaiz1/cmp_luasnip',
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-buffer',
-        'hrsh7th/cmp-path'
-      },
-      config = function()
-        local c = require 'cmp'
-        local l = require 'luasnip'
-        c.setup({
-          snippet = {
-            expand = function(args)
-              require 'luasnip'.lsp_expand(args.body)
-            end
+      'saghen/blink.cmp',
+      event = 'InsertEnter',
+      version = '1.*',
+      dependencies = { 'rafamadriz/friendly-snippets' },
+      opts = {
+        completion = {
+          list = {
+            selection = {
+              preselect = false
+            }
+          }
+        },
+        keymap = {
+          ['<CR>'] = { 'accept', 'fallback' },
+          ["<Tab>"] = {
+            "select_next",
+            "snippet_forward",
+            "fallback"
           },
-          mapping = {
-            ['<Tab>'] = c.mapping(function(fallback)
-              if l.locally_jumpable(1) then
-                l.jump(1)
-              elseif c.visible() then
-                c.select_next_item()
-              else
-                fallback()
-              end
-            end),
-            ['<S-Tab>'] = c.mapping(function(fallback)
-              if l.locally_jumpable(-1) then
-                l.jump(-1)
-              elseif c.visible() then
-                c.select_prev_item()
-              else
-                fallback()
-              end
-            end),
-            ['<CR>'] = c.mapping(function(fallback)
-              if c.visible() then
-                if l.expandable() then
-                  l.expand()
-                else
-                  c.confirm({ select = true })
-                end
-              else
-                fallback()
-              end
-            end),
+          ["<S-Tab>"] = {
+            "select_prev",
+            "snippet_backward",
+            "fallback"
           },
-          sources = c.config.sources({
-            { name = 'nvim_lsp' },
-            { name = 'luasnip' },
-            { name = 'buffer' },
-            { name = 'path' }
-          })
-        })
-      end
+          ['<Up>'] = {},
+          ['<Down>'] = {}
+        }
+      }
     },
     {
       'neovim/nvim-lspconfig',
@@ -168,7 +127,7 @@ require 'lazy'.setup({
       },
       config = function()
         local l = require 'lspconfig'
-        local m = require 'cmp_nvim_lsp'.default_capabilities()
+        local m = require('blink.cmp').get_lsp_capabilities()
         local c = {
           ['jsonls'] = {
             settings = {
@@ -241,23 +200,17 @@ g.mapleader = ' '
 o.mouse = 'a'
 o.signcolumn = 'yes:1'
 o.laststatus = 3
-o.timeoutlen = 500
+o.timeoutlen = 1000
 o.number = true
 o.numberwidth = 1
 o.expandtab = true
 o.shiftwidth = 2
-o.smartindent = true
 o.tabstop = 2
 o.softtabstop = 2
 o.ignorecase = true
 o.smartcase = true
 o.termguicolors = true
 o.clipboard = 'unnamedplus'
-
-vim.diagnostic.config({
-  underline = true,
-  severity_sort = true
-})
 
 keymap('v', '<C-w>', ':m \'<-2<CR>gv=gv', {})
 keymap('v', '<C-s>', ':m \'>+1<CR>gv=gv', {})
@@ -266,11 +219,7 @@ keymap('n', '<Leader>T', ':NvimTreeClose<CR>', {})
 keymap('n', '<Leader>t', '', {
   callback = function()
     local t = require 'nvim-tree.api'.tree
-    if t.is_visible() then
-      t.focus()
-    else
-      t.open()
-    end
+    local _ = t.is_visible() and t.focus() or t.open()
   end
 })
 keymap('n', '<Leader>r', '', {
@@ -284,7 +233,6 @@ keymap('n', '<Leader>r', '', {
       height = h,
       col = math.floor((vim.o.columns - w) / 2),
       row = math.floor((vim.o.lines - h) / 2) - 1,
-      border = "shadow"
     })
     vim.cmd.terminal()
     vim.cmd(':startinsert')
@@ -293,44 +241,22 @@ keymap('n', '<Leader>r', '', {
 keymap('', '<Leader>c', '', {
   callback = function()
     local cs = vim.bo.commentstring
-    local md = vim.api.nvim_get_mode().mode
-
-    if cs == '' then
-      return
+    local mcs = vim.pesc(cs):gsub('%%%%s', '(.*)')
+    local s, e = vim.fn.line('v'), vim.fn.line('.')
+    if s > e then
+      s, e = e, s
     end
-
-    local function comment(l)
-      return l == '' and l or cs:format(l)
+    local function comment(line)
+      return cs:format(line)
     end
-
-    local function uncomment(l)
-      local tcs = cs:gsub('[%-+]', '%%-')
-          :gsub('[%*+]', '%%*')
-          :gsub('%%s', '(.+)')
-
-      local c = l:match(tcs)
-      l = c and l:gsub(tcs, c) or nil
-
-      return l
+    local function uncomment(line)
+      return line:find(mcs) == 1 and line:match(mcs) or nil
     end
-
-    if md == 'n' then
-      local l = vim.api.nvim_get_current_line()
-      l = uncomment(l) or comment(l)
-      vim.api.nvim_set_current_line(l)
+    local lines = vim.api.nvim_buf_get_lines(0, s - 1, e, false), s, e
+    for i, line in ipairs(lines) do
+      lines[i] = uncomment(line) or comment(line)
     end
-
-    if md == 'v' then
-      local s, e = vim.fn.line('v'), vim.fn.line('.')
-      if s > e then
-        s, e = e, s
-      end
-      local ls = vim.api.nvim_buf_get_lines(0, s - 1, e, true)
-      for i, l in ipairs(ls) do
-        ls[i] = uncomment(l) or comment(l)
-      end
-      vim.api.nvim_buf_set_lines(0, s - 1, e, true, ls)
-    end
+    vim.api.nvim_buf_set_lines(0, s - 1, e, true, lines)
   end
 })
 
@@ -358,13 +284,21 @@ function Statusline()
     ['t'] = 'TERMINAL',
     ['nt'] = 'TERMINAL',
   }
+  local ic, hi = require("nvim-web-devicons").get_icon_by_filetype(vim.bo.filetype)
+  ic = ic or ''
+  hi = hi or ''
   return
-      '%#IncSearch#%  ' .. m[vim.api.nvim_get_mode().mode] ..
-      ' %#StatusLine#%  ' .. ' ' .. "%{get(b:,'gitsigns_head','none')}" ..
-      ' %#StatusLineNC#%  ' .. '%F' ..
-      '%=' ..
-      ' %#StatusLine#%  ' .. '%l:%c' ..
-      ' %#IncSearch#%  ' .. vim.bo.filetype .. ' '
+      '%#WarningMsg#% ┃┃ ' ..
+      m[vim.api.nvim_get_mode().mode] ..
+      '%= %#' .. hi .. '#% ' ..
+      ic .. ' %f'
+      .. '%=' ..
+      ' %#DiagnosticError#%   ' .. #vim.diagnostic.get(0, { severity = 'Error' }) ..
+      ' %#DiagnosticWarn#%  ' .. #vim.diagnostic.get(0, { severity = 'Warn' }) ..
+      ' %#DiagnosticHint#%  ' .. #vim.diagnostic.get(0, { severity = 'Hint' }) ..
+      ' %#Statusline#%  %l:%c' ..
+      ' %#PreProc#%   ' .. "%{get(b:,'gitsigns_head','none')} " ..
+      ' %#WarningMsg#% ' .. vim.loop.os_uname().sysname .. ' ┃┃'
 end
 
 autocmd({ 'BufEnter', 'WinEnter' }, {
