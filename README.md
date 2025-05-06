@@ -1,6 +1,8 @@
 # 📝 mi.nvim
 
-minimal neovim configuration concentrated in a single file.
+![image](https://github.com/user-attachments/assets/389e9604-693c-4967-8d36-90a1ded2fee8)
+
+Minimal neovim configuration concentrated in a single file.
 
 ## 📋 Pre-requisites
 - [Neovim 0.10+](https://neovim.io/)
