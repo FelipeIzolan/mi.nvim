@@ -2,13 +2,14 @@
 
 ![image](https://github.com/user-attachments/assets/389e9604-693c-4967-8d36-90a1ded2fee8)
 
-Minimal neovim configuration concentrated in a single file.
+Minimal neovim configuration concentrated in a single file (~100 ms startup time).
 
 ## 📋 Pre-requisites
 - [Neovim 0.10+](https://neovim.io/)
 - [Nerd Font](https://www.nerdfonts.com/)
 - GCC, Windows users must have [mingw](https://scoop.sh/#/apps?q=mingw&id=965b35870a2cbc6584a302ef1721c7f18faaef24) installed.
 - Make, Windows users must have [make](https://scoop.sh/#/apps?q=make&id=c43ff861c0f1713336e5304d85334a29ffb86317) installed.
+- curl
 
 > [!IMPORTANT]
 > I recommend using [scoop](https://scoop.sh/) (a command-line installer for Windows) to install GCC and Make;
@@ -32,7 +33,7 @@ Minimal neovim configuration concentrated in a single file.
 ## ⌨️ Mappings
 
 - **\<Leader\> + q** - Quit.
-- **\<Leader\> + r** - Open Terminal.
+- **\<Leader\> + r** - Toggle Terminal.
 - **\<Leader\> + c** - Comment or uncomment line or block.
 - **\<Leader\> + t** - Open or focus file explorer.
 - **\<Leader\> + T** - Close file explorer.

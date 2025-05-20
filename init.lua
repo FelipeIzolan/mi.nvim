@@ -1,4 +1,4 @@
---- LAZY
+-- LAZY
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
@@ -17,6 +17,15 @@ vim.opt.rtp:prepend(lazypath)
 
 require 'lazy'.setup({
     'nvim-tree/nvim-web-devicons',
+    {
+      'nvimdev/indentmini.nvim',
+      event = { "BufReadPost", "BufNewFile" },
+      config = function()
+        require 'indentmini'.setup()
+        vim.cmd.highlight('IndentLine guifg=#2a2a37')
+        vim.cmd.highlight('IndentLineCurrent guifg=#2a2a37')
+      end
+    },
     {
       'williamboman/mason.nvim',
       cmd = { "Mason", "MasonInstall", "MasonUpdate" },
@@ -42,7 +51,6 @@ require 'lazy'.setup({
       cmd = { "TSInstall", "TSInstallInfo", "TSModuleInfo" },
       build = ':TSUpdate',
       config = function()
-        require("nvim-treesitter.install").prefer_git = true
         require 'nvim-treesitter.configs'.setup {
           auto_install = true,
           highlight = {
@@ -190,7 +198,7 @@ require 'lazy'.setup({
     }
   })
 
---- NEOVIM
+-- NEOVIM
 local g = vim.g
 local o = vim.opt
 local keymap = vim.api.nvim_set_keymap
@@ -223,22 +231,6 @@ keymap('n', '<Leader>t', '', {
     local _ = t.is_visible() and t.focus() or t.open()
   end
 })
-keymap('n', '<Leader>r', '', {
-  callback = function()
-    local buf = vim.api.nvim_create_buf(false, true)
-    local w = math.floor(vim.o.columns * 0.8)
-    local h = math.floor(vim.o.lines * 0.8)
-    vim.api.nvim_open_win(buf, true, {
-      relative = 'editor',
-      width = w,
-      height = h,
-      col = math.floor((vim.o.columns - w) / 2),
-      row = math.floor((vim.o.lines - h) / 2) - 1,
-    })
-    vim.cmd.terminal()
-    vim.cmd(':startinsert')
-  end
-})
 keymap('', '<Leader>c', '', {
   callback = function()
     local cs = vim.bo.commentstring
@@ -251,13 +243,36 @@ keymap('', '<Leader>c', '', {
       return cs:format(line)
     end
     local function uncomment(line)
-      return line:find(mcs) == 1 and line:match(mcs) or nil
+      return line:find(mcs) ~= nil and line:match(mcs) or nil
     end
     local lines = vim.api.nvim_buf_get_lines(0, s - 1, e, false), s, e
     for i, line in ipairs(lines) do
       lines[i] = uncomment(line) or comment(line)
     end
     vim.api.nvim_buf_set_lines(0, s - 1, e, true, lines)
+  end
+})
+
+local win = -1
+vim.keymap.set({ 'n', 't' }, '<Leader>r', '', {
+  callback = function()
+    if vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_close(win, true)
+      win = -1
+    else
+      local buf = vim.api.nvim_create_buf(false, true)
+      local w = math.floor(vim.o.columns * 0.8)
+      local h = math.floor(vim.o.lines * 0.8)
+      win = vim.api.nvim_open_win(buf, true, {
+        relative = 'editor',
+        width = w,
+        height = h,
+        col = math.floor((vim.o.columns - w) / 2),
+        row = math.floor((vim.o.lines - h) / 2) - 1,
+      })
+      vim.cmd.terminal()
+      vim.cmd(':startinsert')
+    end
   end
 })
 
@@ -285,15 +300,10 @@ function Statusline()
     ['t'] = 'TERMINAL',
     ['nt'] = 'TERMINAL',
   }
-  local ic, hi = require("nvim-web-devicons").get_icon_by_filetype(vim.bo.filetype)
-  ic = ic or ''
-  hi = hi or ''
   return
       '%#WarningMsg#% ┃┃ ' ..
       m[vim.api.nvim_get_mode().mode] ..
-      '%= %#' .. hi .. '#% ' ..
-      ic .. ' %f'
-      .. '%=' ..
+      '%=' ..
       ' %#DiagnosticError#%   ' .. #vim.diagnostic.get(0, { severity = 'Error' }) ..
       ' %#DiagnosticWarn#%  ' .. #vim.diagnostic.get(0, { severity = 'Warn' }) ..
       ' %#DiagnosticHint#%  ' .. #vim.diagnostic.get(0, { severity = 'Hint' }) ..
