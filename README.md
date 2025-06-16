@@ -33,7 +33,6 @@ Minimal neovim configuration concentrated in a single file (~100 ms startup time
 ## ⌨️ Mappings
 
 - **\<Leader\> + q** - Quit.
-- **\<Leader\> + r** - Toggle Terminal.
 - **\<Leader\> + c** - Comment or uncomment line or block.
 - **\<Leader\> + t** - Open or focus file explorer.
 - **\<Leader\> + T** - Close file explorer.
@@ -45,11 +44,6 @@ Minimal neovim configuration concentrated in a single file (~100 ms startup time
 - **\<Tab\>** - Select next item.
 - **\<S-Tab\>** - Select previous item.
 - **\<CR\>** - Confirm.
-
-**nvim-tree**
-
-- **\<CR\>** - Change directory or open file.
-- **+ Default mappings** - https://github.com/nvim-tree/nvim-tree.lua
 
 > [!NOTE]
 > **\<C\>** is Ctrl;\

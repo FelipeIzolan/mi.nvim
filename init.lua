@@ -72,29 +72,14 @@ require 'lazy'.setup({
             }
           end
         }
-        vim.cmd('colorscheme kanagawa')
+        vim.cmd('colorscheme kanagawa-dragon')
       end
     },
     {
       'nvim-tree/nvim-tree.lua',
       config = {
         hijack_cursor = true,
-        filters = { enable = false },
-        on_attach = function(bufnr)
-          local api = require("nvim-tree.api")
-          local opts = { buffer = bufnr, noremap = true, silent = true, nowait = true }
-
-          api.config.mappings.default_on_attach(bufnr)
-
-          vim.keymap.set("n", "<CR>", function()
-            local node = api.tree.get_node_under_cursor()
-            if node and node.type == "directory" then
-              api.tree.change_root_to_node()
-            else
-              api.node.open.edit()
-            end
-          end, opts)
-        end,
+        filters = { enable = false }
       }
     },
     {
@@ -129,7 +114,7 @@ require 'lazy'.setup({
     },
     {
       'neovim/nvim-lspconfig',
-      event = { "BufReadPost", "BufNewFile" },
+      event = "User FilePost",
       dependencies = {
         'williamboman/mason-lspconfig.nvim',
         'b0o/schemastore.nvim',
@@ -250,29 +235,6 @@ keymap('', '<Leader>c', '', {
       lines[i] = uncomment(line) or comment(line)
     end
     vim.api.nvim_buf_set_lines(0, s - 1, e, true, lines)
-  end
-})
-
-local win = -1
-vim.keymap.set({ 'n', 't' }, '<Leader>r', '', {
-  callback = function()
-    if vim.api.nvim_win_is_valid(win) then
-      vim.api.nvim_win_close(win, true)
-      win = -1
-    else
-      local buf = vim.api.nvim_create_buf(false, true)
-      local w = math.floor(vim.o.columns * 0.8)
-      local h = math.floor(vim.o.lines * 0.8)
-      win = vim.api.nvim_open_win(buf, true, {
-        relative = 'editor',
-        width = w,
-        height = h,
-        col = math.floor((vim.o.columns - w) / 2),
-        row = math.floor((vim.o.lines - h) / 2) - 1,
-      })
-      vim.cmd.terminal()
-      vim.cmd(':startinsert')
-    end
   end
 })
 
