@@ -17,7 +17,7 @@ Minimal neovim configuration concentrated in a single file (~100 ms startup time
 ## 🧩 Plugins
 
 - [folke/lazy.nvim](https://github.com/folke/lazy.nvim) - Plugin Manager
-- [rebelot/kanagawa.nvim](https://github.com/rebelot/kanagawa.nvim) - Colorscheme
+- [olivercederborg/poimandres.nvim](https://github.com/olivercederborg/poimandres.nvim) - Colorscheme
 - [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) - Nvim LSP Config
 - [williamboman/mason.nvim](https://github.com/williamboman/mason.nvim) - Nvim Package Manager
 - [williamboman/mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim) - Mason Extension for LSP Config
@@ -36,6 +36,7 @@ Minimal neovim configuration concentrated in a single file (~100 ms startup time
 - **\<Leader\> + c** - Comment or uncomment line or block.
 - **\<Leader\> + t** - Open or focus file explorer.
 - **\<Leader\> + T** - Close file explorer.
+- **\<Leader\> + \<Tab\>** - Toggle terminal.
 - **\<C\> + w** - Move selected block up.
 - **\<C\> + s** - Move selected block down.
 

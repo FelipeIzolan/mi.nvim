@@ -18,15 +18,6 @@ vim.opt.rtp:prepend(lazypath)
 require 'lazy'.setup({
     'nvim-tree/nvim-web-devicons',
     {
-      'nvimdev/indentmini.nvim',
-      event = { "BufReadPost", "BufNewFile" },
-      config = function()
-        require 'indentmini'.setup()
-        vim.cmd.highlight('IndentLine guifg=#2a2a37')
-        vim.cmd.highlight('IndentLineCurrent guifg=#2a2a37')
-      end
-    },
-    {
       'williamboman/mason.nvim',
       cmd = { "Mason", "MasonInstall", "MasonUpdate" },
       config = true
@@ -46,6 +37,15 @@ require 'lazy'.setup({
       }
     },
     {
+      'nvimdev/indentmini.nvim',
+      event = { "BufReadPost", "BufNewFile" },
+      config = function()
+        require 'indentmini'.setup()
+        vim.cmd.highlight('IndentLine guifg=#506477')
+        vim.cmd.highlight('IndentLineCurrent guifg=#91b4d5')
+      end
+    },
+    {
       'nvim-treesitter/nvim-treesitter',
       event = { "BufReadPost", "BufNewFile" },
       cmd = { "TSInstall", "TSInstallInfo", "TSModuleInfo" },
@@ -60,26 +60,27 @@ require 'lazy'.setup({
       end
     },
     {
-      'rebelot/kanagawa.nvim',
+      'olivercederborg/poimandres.nvim',
       lazy = false,
       priority = 1000,
       config = function()
-        require 'kanagawa'.setup {
-          overrides = function()
-            return {
-              FloatBorder = { bg = nil },
-              Pmenu = { link = 'FloatBorder' },
-            }
-          end
-        }
-        vim.cmd('colorscheme kanagawa-dragon')
+        require('poimandres').setup {}
+        vim.cmd('colorscheme poimandres')
       end
     },
     {
       'nvim-tree/nvim-tree.lua',
       config = {
         hijack_cursor = true,
-        filters = { enable = false }
+        filters = { enable = false },
+        renderer = {
+          root_folder_label = function()
+            return '  ..'
+          end,
+        },
+        view = {
+          signcolumn = 'no'
+        }
       }
     },
     {
@@ -93,7 +94,8 @@ require 'lazy'.setup({
             selection = {
               preselect = false
             }
-          }
+          },
+          documentation = { auto_show = true },
         },
         keymap = {
           ['<CR>'] = { 'accept', 'fallback' },
@@ -114,7 +116,7 @@ require 'lazy'.setup({
     },
     {
       'neovim/nvim-lspconfig',
-      event = "User FilePost",
+      event = { "BufReadPre", "BufNewFile", "User FilePost" },
       dependencies = {
         'williamboman/mason-lspconfig.nvim',
         'b0o/schemastore.nvim',
@@ -186,10 +188,14 @@ require 'lazy'.setup({
 -- NEOVIM
 local g = vim.g
 local o = vim.opt
-local keymap = vim.api.nvim_set_keymap
+local keymap = vim.keymap.set
 local autocmd = vim.api.nvim_create_autocmd
 
 g.mapleader = ' '
+local term = {
+  buf = nil,
+  win = nil
+}
 
 o.mouse = 'a'
 o.signcolumn = 'yes:1'
@@ -228,13 +234,33 @@ keymap('', '<Leader>c', '', {
       return cs:format(line)
     end
     local function uncomment(line)
-      return line:find(mcs) ~= nil and line:match(mcs) or nil
+      return line:find(mcs) ~= nil and line:gsub(mcs, line:match(mcs)) or nil
     end
     local lines = vim.api.nvim_buf_get_lines(0, s - 1, e, false), s, e
     for i, line in ipairs(lines) do
       lines[i] = uncomment(line) or comment(line)
     end
     vim.api.nvim_buf_set_lines(0, s - 1, e, true, lines)
+  end
+})
+keymap({ 'n', 't' }, '<Leader><Tab>', '', {
+  callback = function()
+    if term.buf == nil or not vim.api.nvim_buf_is_valid(term.buf) then
+      term.buf = vim.api.nvim_create_buf(false, true)
+    end
+    if term.win == nil or not vim.api.nvim_win_is_valid(term.win) then
+      term.win = vim.api.nvim_open_win(term.buf, true, {
+        width = vim.o.columns,
+        height = math.ceil(vim.o.lines * 0.3),
+        split = "below"
+      })
+      if vim.bo[term.buf].buftype ~= "terminal" then
+        vim.cmd.terminal()
+      end
+      vim.cmd.startinsert()
+    else
+      vim.api.nvim_win_hide(term.win)
+    end
   end
 })
 
@@ -263,7 +289,7 @@ function Statusline()
     ['nt'] = 'TERMINAL',
   }
   return
-      '%#WarningMsg#% ┃┃ ' ..
+      '%#SpecialKey#% ┃┃ ' ..
       m[vim.api.nvim_get_mode().mode] ..
       '%=' ..
       ' %#DiagnosticError#%   ' .. #vim.diagnostic.get(0, { severity = 'Error' }) ..
@@ -271,7 +297,7 @@ function Statusline()
       ' %#DiagnosticHint#%  ' .. #vim.diagnostic.get(0, { severity = 'Hint' }) ..
       ' %#Statusline#%  %l:%c' ..
       ' %#PreProc#%   ' .. "%{get(b:,'gitsigns_head','none')} " ..
-      ' %#WarningMsg#% ' .. vim.loop.os_uname().sysname .. ' ┃┃'
+      ' %#SpecialKey#% ' .. vim.loop.os_uname().sysname .. ' ┃┃'
 end
 
 autocmd({ 'BufEnter', 'WinEnter' }, {
