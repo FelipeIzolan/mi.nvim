@@ -1,6 +1,6 @@
 # 📝 mi.nvim
 
-![image](https://github.com/user-attachments/assets/389e9604-693c-4967-8d36-90a1ded2fee8)
+![image](https://github.com/user-attachments/assets/b8662369-ff31-4de5-8b29-bf6e25ce5d61)
 
 Minimal neovim configuration concentrated in a single file (~100 ms startup time).
 
