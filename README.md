@@ -1,7 +1,5 @@
 # 📝 mi.nvim
 
-![image](https://github.com/user-attachments/assets/b8662369-ff31-4de5-8b29-bf6e25ce5d61)
-
 Minimal neovim configuration concentrated in a single file (~100 ms startup time).
 
 ## 📋 Pre-requisites
@@ -17,7 +15,7 @@ Minimal neovim configuration concentrated in a single file (~100 ms startup time
 ## 🧩 Plugins
 
 - [folke/lazy.nvim](https://github.com/folke/lazy.nvim) - Plugin Manager
-- [olivercederborg/poimandres.nvim](https://github.com/olivercederborg/poimandres.nvim) - Colorscheme
+- [ellisonleao/gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim) - Colorscheme
 - [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) - Nvim LSP Config
 - [williamboman/mason.nvim](https://github.com/williamboman/mason.nvim) - Nvim Package Manager
 - [williamboman/mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim) - Mason Extension for LSP Config
@@ -29,6 +27,7 @@ Minimal neovim configuration concentrated in a single file (~100 ms startup time
 - [Saghen/blink.cmp](https://github.com/Saghen/blink.cmp) - Completion Engine
 - [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) - Git Integration
 - [stevearc/conform.nvim](https://github.com/stevearc/conform.nvim) - Formatter
+- [nvimdev/indentmini.nvim](https://github.com/nvimdev/indentmini.nvim) - IndentLine
 
 ## ⌨️ Mappings
 
