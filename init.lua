@@ -301,8 +301,18 @@ autocmd({ 'BufEnter', 'WinEnter' }, {
     vim.cmd('setlocal statusline=%!v:lua.Statusline()')
   end
 })
-autocmd("CursorHold", {
+autocmd('CursorHold', {
   callback = function()
-    vim.diagnostic.open_float(nil, { scope = "line" })
+    local _, win = vim.diagnostic.open_float(nil, { scope = "line" })
+    if win ~= nil then
+      autocmd('BufEnter', {
+        once = true,
+        callback = function()
+          if vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_win_close(win, false);
+          end
+        end
+      })
+    end
   end
 })
