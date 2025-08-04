@@ -1,4 +1,5 @@
 # 📝 mi.nvim
+<img width="1440" height="900" alt="image" src="https://github.com/user-attachments/assets/3bdaee01-cb0e-48ee-8c8d-70069259f37e" />
 
 Minimal neovim configuration concentrated in a single file (~100 ms startup time).
 
